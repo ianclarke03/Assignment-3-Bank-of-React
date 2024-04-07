@@ -1,36 +1,84 @@
-/*==================================================
-src/components/Debits.js
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
-The Debits component contains information for Debits page view.
-Note: You need to work on this file for the Assignment.
-==================================================*/
-import {Link} from 'react-router-dom';
+const Debits = ({ addDebit, accountBalance }) => {
+  const [newDebitDescription, setNewDebitDescription] = useState('');
+  const [newDebitAmount, setNewDebitAmount] = useState('');
+  const [debits, setDebits] = useState([]);
 
-const Debits = (props) => {
-  // Create the list of Debit items
-  let debitsView = () => {
-    const { debits } = props;
-    return debits.map((debit) => {  // Extract "id", "amount", "description" and "date" properties of each debits JSON array element
-      let date = debit.date.slice(0,10);
-      return <li key={debit.id}>{debit.amount} {debit.description} {date}</li>
-    });
-  }
-  // Render the list of Debit items and a form to input new Debit item
+  useEffect(() => {
+    fetch('https://johnnylaicode.github.io/api/debits.json')
+      .then((response) => response.json())
+      .then((data) => {
+        setDebits(data);
+      })
+      .catch((error) => console.error('Error fetching debits:', error));
+  }, []);
+
+  const handleAddDebit = (event) => {
+    event.preventDefault();
+
+    if (!newDebitDescription || !newDebitAmount) {
+      alert('Please enter both description and amount for the debit.');
+      return;
+    }
+    addDebit(newDebitDescription, parseFloat(newDebitAmount));
+
+    // Update state
+    setDebits([
+      ...debits,
+      {
+        description: newDebitDescription,
+        amount: parseFloat(newDebitAmount),
+        date: new Date().toISOString().slice(0, 10)
+      }
+    ]);
+
+    setNewDebitDescription('');
+    setNewDebitAmount('');
+  };
+
   return (
     <div>
       <h1>Debits</h1>
-
-      {debitsView()}
-
-      <form onSubmit={props.addDebit}>
-        <input type="text" name="description" />
-        <input type="number" name="amount" />
+      <form onSubmit={handleAddDebit}>
+        <label>
+          Description:
+          <input
+            type="text"
+            value={newDebitDescription}
+            onChange={(e) => setNewDebitDescription(e.target.value)}
+          />
+        </label>
+        <label>
+          Amount:
+          <input
+            type="number"
+            value={newDebitAmount}
+            onChange={(e) => setNewDebitAmount(e.target.value)}
+          />
+        </label>
         <button type="submit">Add Debit</button>
       </form>
-      <br/>
-      <Link to="/">Return to Home</Link>
+      <br />
+      <h2>Debits List</h2>
+      <ul>
+        {debits.map((debit, index) => (
+          <li key={index}>
+            <strong>Description:</strong> {debit.description}, &nbsp;
+            <strong>Amount:</strong> ${debit.amount.toFixed(2)}, &nbsp;
+            <strong>Date:</strong> {debit.date}
+          </li>
+        ))}
+      </ul>
+      <div>
+        <strong>Account Balance:</strong> ${accountBalance.toFixed(2)}
+      </div>
+      <div>
+        <Link to="/">Return to Home</Link>
+      </div>
     </div>
   );
-}
+};
 
 export default Debits;
