@@ -106,7 +106,7 @@ class App extends Component {
     );
 
     return (
-      <Router basename="/bank-of-react-starter-code">
+      <Router basename="/Assignment-3-Bank-of-React">
         <div>
           <Route exact path="/" render={HomeComponent} />
           <Route exact path="/userProfile" render={UserProfileComponent} />

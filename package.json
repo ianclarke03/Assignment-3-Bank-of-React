@@ -1,7 +1,7 @@
 {
   "name": "bank-of-react",
   "version": "0.1.0",
-  "homepage": "https://johnnylaicode.github.io/bank-of-react-starter-code/",
+  "homepage": "https://ianclarke03.github.io/Assignment-3-Bank-of-React/",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -45,3 +45,5 @@
     "gh-pages": "^3.2.3"
   }
 }
+
+
